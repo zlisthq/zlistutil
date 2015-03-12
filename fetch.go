@@ -130,12 +130,10 @@ func FetchHackerNews(url string, num int) []Item {
 	var ids []int
 	err = json.Unmarshal(body, &ids)
 	perror(err)
-	// fmt.Println(ids)
 	var items []Item
 	num = min(num, len(ids))
 	for i := 0; i < num; i++ {
 		item_url := HACKER_NEWS_ITEM + strconv.Itoa(ids[i]) + ".json"
-		// fmt.Println(item_url)
 		body, err := http_helper("GET", item_url)
 		perror(err)
 		var item Item
@@ -160,7 +158,6 @@ func FetchV2ex(url string, num int) []Item {
 	var items []Item
 	err = json.Unmarshal(body, &items)
 	perror(err)
-	// fmt.Println(items)
 	num = min(num, len(items))
 	return items[:num]
 }
