@@ -26,7 +26,7 @@ func main() {
 }
 ```
 
-## 使用者
+## 使用该工具的站点
 
 - [zlist](http://zlist.whiteworld.me/)
 
