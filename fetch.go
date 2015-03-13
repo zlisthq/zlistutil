@@ -27,6 +27,9 @@ const (
 	JIANSHU_TOP_DAY  = "http://www.jianshu.com/trending/now"
 	// Product Hunt
 	PRODUCTHUNT_DAY = "https://api.producthunt.com/v1/posts"
+	//36kr NEXT
+	NEXT_BASE_URL = "http://next.36kr.com"
+	NEXT          = "http://next.36kr.com/posts"
 )
 
 type Item struct {
@@ -121,6 +124,25 @@ func FetchJianshu(url string, num int) []Item {
 	num = min(num, len(items))
 	return items[:num]
 }
+
+func FetchNEXT(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	doc, err := goquery.NewDocument(url)
+	perror(err)
+	var items []Item
+	doc.Find(".post").First().Find(".product-item").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = s.Find(".product-url a").Text() + " : " + s.Find(".post-tagline").Text()
+		item.Url, _ = s.Find(".product-url a").Attr("href")
+		item.Url = NEXT_BASE_URL + item.Url
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
+}
+
 func FetchHackerNews(url string, num int) []Item {
 	if num < 0 {
 		return nil

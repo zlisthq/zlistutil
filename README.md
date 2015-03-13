@@ -32,6 +32,8 @@ func main() {
 
 ## 待添加站点
 
+- ~~NEXT~~
+- MindStore
 - PingWest
 - 好奇心日报
 - 弯曲日报

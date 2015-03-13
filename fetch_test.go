@@ -24,6 +24,18 @@ func TestFetchJianshu(t *testing.T) {
 		t.Error("Expected not nil")
 	}
 }
+
+func TestFetchNEXT(t *testing.T) {
+	var item_list []Item
+	num := 1
+	item_list = FetchNEXT(NEXT, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+}
+
 func TestFetchHackerNews(t *testing.T) {
 	var item_list []Item
 	num := 1
