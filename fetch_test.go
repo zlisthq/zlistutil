@@ -66,3 +66,43 @@ func TestFetchZhihuDaily(t *testing.T) {
 		t.Error("Expected not nil")
 	}
 }
+func TestFetchWanqu(t *testing.T) {
+	var item_list []Item
+	num := 1
+	item_list = FetchWanqu(WANQU, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+}
+func TestFetchPingWestNews(t *testing.T) {
+	var item_list []Item
+	num := 1
+	item_list = FetchPingWestNews(PINGWEST_NEWS, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+}
+func TestFetchSolidot(t *testing.T) {
+	var item_list []Item
+	num := 1
+	item_list = FetchSolidot(SOLIDOT, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+}
+func TestFetchGitHub(t *testing.T) {
+	var item_list []Item
+	num := 1
+	item_list = FetchGitHub(GITHUB, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+}

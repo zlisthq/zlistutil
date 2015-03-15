@@ -32,9 +32,15 @@ func main() {
 
 ## 待添加站点
 
+- ~~Product Hunt~~
+- ~~简书~~
 - ~~NEXT~~
-- MindStore
-- PingWest
-- 好奇心日报
-- 弯曲日报
+- ~~Hacker News~~
+- ~~V2EX~~
+- ~~知乎日报~~
+- ~~湾区日报~~
+- ~~PingWest News~~
+- ~~solidot~~
+- ~~GitHub~~
+- 豆瓣轻松一刻
 

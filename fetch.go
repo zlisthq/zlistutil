@@ -2,11 +2,13 @@ package zlistutil
 
 import (
 	"encoding/json"
+	// "fmt"
 	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -30,6 +32,15 @@ const (
 	//36kr NEXT
 	NEXT_BASE_URL = "http://next.36kr.com"
 	NEXT          = "http://next.36kr.com/posts"
+	//湾区日报
+	WANQU = "http://wanqu.co"
+	//PingWest快讯
+	PINGWEST_NEWS = "http://news.pingwest.com/"
+	//Solidot
+	SOLIDOT = "http://www.solidot.org"
+	//GitHub
+	GITHUB_BASE_URL = "https://github.com"
+	GITHUB          = "https://github.com/trending"
 )
 
 type Item struct {
@@ -206,4 +217,76 @@ func FetchZhihuDaily(url string, num int) []Item {
 	}
 	return items
 
+}
+func FetchWanqu(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	doc, err := goquery.NewDocument(url)
+	perror(err)
+	var items []Item
+	doc.Find(".list-group-item").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = s.Find("a").Text()
+		item.Url, _ = s.Find(".a").Attr("href")
+		item.Url = WANQU + item.Url
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
+
+}
+func FetchPingWestNews(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	doc, err := goquery.NewDocument(url)
+	perror(err)
+	var items []Item
+	doc.Find(".item_title").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = s.Find(".topic").Text()
+		item.Url, _ = s.Find(".topic").Attr("href")
+		items = append(items, item)
+		// fmt.Print(i)
+	})
+	num = min(num, len(items))
+	return items[:num]
+
+}
+
+func FetchSolidot(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	doc, err := goquery.NewDocument(url)
+	perror(err)
+	var items []Item
+	doc.Find(".bg_htit").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = s.Find("a").Last().Text()
+		item.Url, _ = s.Find("a").Last().Attr("href")
+		item.Url = SOLIDOT + item.Url
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
+}
+func FetchGitHub(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	doc, err := goquery.NewDocument(url)
+	perror(err)
+	var items []Item
+	doc.Find(".repo-list-item").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		// item.Title = s.Find(".repo-list-name a").Text()
+		item.Url, _ = s.Find(".repo-list-name a").Attr("href")
+		item.Title = item.Url[1:] + " : " + strings.TrimSpace(s.Find(".repo-list-description").Text())
+		item.Url = GITHUB_BASE_URL + item.Url
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
 }
