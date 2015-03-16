@@ -44,6 +44,8 @@ const (
 	GITHUB          = "https://github.com/trending"
 	//豆瓣 一刻
 	DOUBAN_MOMENT = "http://moment.douban.com/api/stream/date/"
+	//ifanr 观察
+	IFANR = "http://www.ifanr.com"
 )
 
 type Item struct {
@@ -326,4 +328,20 @@ func FetchDoubanMoment(url string, num int) []Item {
 	}
 	return items
 
+}
+func FetchIfanr(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	doc, err := goquery.NewDocument(url)
+	perror(err)
+	var items []Item
+	doc.Find(".live-list li").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = s.Find("a").Text()
+		item.Url, _ = s.Find("a").Attr("href")
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
 }

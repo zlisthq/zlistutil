@@ -43,6 +43,7 @@ func main() {
 - ~~Solidot~~
 - ~~GitHub~~
 - ~~豆瓣一刻~~
+- ~~ifanr 观察~~
 - CC98
 
 
