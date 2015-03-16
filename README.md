@@ -2,7 +2,7 @@
 
 ## 简介
 
-一个工具，提供了获取 V2EX、知乎日报、HackerNews、简书、ProductHunt 等站点最热信息的方法。
+一个工具库，提供了获取 V2EX、知乎日报、HackerNews、简书、ProductHunt 等站点最热信息的方法。
 
 ## 使用方法
 
@@ -40,7 +40,9 @@ func main() {
 - ~~知乎日报~~
 - ~~湾区日报~~
 - ~~PingWest News~~
-- ~~solidot~~
+- ~~Solidot~~
 - ~~GitHub~~
-- 豆瓣轻松一刻
+- ~~豆瓣一刻~~
+- CC98
+
 

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -41,6 +42,8 @@ const (
 	//GitHub
 	GITHUB_BASE_URL = "https://github.com"
 	GITHUB          = "https://github.com/trending"
+	//豆瓣 一刻
+	DOUBAN_MOMENT = "http://moment.douban.com/api/stream/date/"
 )
 
 type Item struct {
@@ -54,7 +57,12 @@ type DailyItems struct {
 		Url   string `json:"share_url"`
 	}
 }
-
+type MomentItems struct {
+	Posts []struct {
+		Title string `json:"title"`
+		Url   string `json:"url"`
+	}
+}
 type ProductHuntsItems struct {
 	Posts []struct {
 		Name    string `json:"name"`
@@ -88,6 +96,11 @@ func min(a, b int) int {
 	} else {
 		return b
 	}
+}
+func getDate() string {
+	const layout = "2006-01-02"
+	t := time.Now()
+	return t.Format(layout)
 }
 func FetchProductHunt(url string, num int) []Item {
 	if num < 0 {
@@ -289,4 +302,28 @@ func FetchGitHub(url string, num int) []Item {
 	})
 	num = min(num, len(items))
 	return items[:num]
+}
+func FetchDoubanMoment(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	url += getDate()
+	res, err := http.Get(url)
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	perror(err)
+	var moment MomentItems
+	err = json.Unmarshal(body, &moment)
+	perror(err)
+
+	var items []Item
+	num = min(num, len(moment.Posts))
+	for i := 0; i < num; i++ {
+		var item Item
+		item.Title = moment.Posts[i].Title
+		item.Url = moment.Posts[i].Url
+		items = append(items, item)
+	}
+	return items
+
 }

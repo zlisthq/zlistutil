@@ -106,3 +106,13 @@ func TestFetchGitHub(t *testing.T) {
 		t.Error("Expected not nil")
 	}
 }
+func TestFetchDoubanMoment(t *testing.T) {
+	var item_list []Item
+	num := 1
+	item_list = FetchDoubanMoment(DOUBAN_MOMENT, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+}
