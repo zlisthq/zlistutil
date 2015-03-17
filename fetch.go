@@ -243,7 +243,7 @@ func FetchWanqu(url string, num int) []Item {
 	doc.Find(".list-group-item").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = s.Find("a").Text()
-		item.Url, _ = s.Find(".a").Attr("href")
+		item.Url, _ = s.Find("a").Attr("href")
 		item.Url = WANQU + item.Url
 		items = append(items, item)
 	})
