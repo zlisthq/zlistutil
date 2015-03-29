@@ -44,6 +44,7 @@ func main() {
 - ~~GitHub~~
 - ~~豆瓣一刻~~
 - ~~ifanr 观察~~
+- ~~mindstore~~
 - 澎湃新闻
 - 少数派
 - 什么值得买

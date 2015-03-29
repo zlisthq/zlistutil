@@ -7,7 +7,7 @@ import (
 func TestFetchProductHunt(t *testing.T) {
 	var item_list []Item
 	num := 1
-	item_list = FetchProductHunt(PRODUCTHUNT_DAY, num)
+	item_list = FetchProductHunt(PRODUCTHUNT_TODAY, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
@@ -120,6 +120,16 @@ func TestFetchIfanr(t *testing.T) {
 	var item_list []Item
 	num := 1
 	item_list = FetchIfanr(IFANR, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+}
+func TestFetchMindStore(t *testing.T) {
+	var item_list []Item
+	num := 1
+	item_list = FetchMindStore(MINDSTORE, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {

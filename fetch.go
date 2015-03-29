@@ -29,7 +29,8 @@ const (
 	JIANSHU_BASE_URL = "http://www.jianshu.com"
 	JIANSHU_TOP_DAY  = "http://www.jianshu.com/trending/now"
 	// Product Hunt
-	PRODUCTHUNT_DAY = "https://api.producthunt.com/v1/posts"
+	PRODUCTHUNT_TODAY     = "https://api.producthunt.com/v1/posts"
+	PRODUCTHUNT_YESTERDAY = "https://api.producthunt.com/v1/posts?days_ago=1"
 	//36kr NEXT
 	NEXT_BASE_URL = "http://next.36kr.com"
 	NEXT          = "http://next.36kr.com/posts"
@@ -46,6 +47,8 @@ const (
 	DOUBAN_MOMENT = "http://moment.douban.com/api/stream/date/"
 	//ifanr 观察
 	IFANR = "http://www.ifanr.com"
+	//mindstore
+	MINDSTORE = "http://mindstore.io"
 )
 
 type Item struct {
@@ -104,7 +107,17 @@ func getDate() string {
 	t := time.Now()
 	return t.Format(layout)
 }
+
 func FetchProductHunt(url string, num int) []Item {
+	var item_list []Item
+	item_list = fetchProductHuntHelper(url, num)
+	if item_list == nil && url == PRODUCTHUNT_TODAY {
+		item_list = fetchProductHuntHelper(PRODUCTHUNT_YESTERDAY, num)
+	}
+	return item_list
+}
+
+func fetchProductHuntHelper(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -340,6 +353,23 @@ func FetchIfanr(url string, num int) []Item {
 		var item Item
 		item.Title = s.Find("a").Text()
 		item.Url, _ = s.Find("a").Attr("href")
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
+}
+
+func FetchMindStore(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	doc, err := goquery.NewDocument(url)
+	perror(err)
+	var items []Item
+	doc.Find(".mind-list-ul li").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = strings.TrimSpace(s.Find(".mind-title a").Text()) + " : " + s.Find(".mind-des").Text()
+		item.Url, _ = s.Find(".mind-title a").Attr("href")
 		items = append(items, item)
 	})
 	num = min(num, len(items))
