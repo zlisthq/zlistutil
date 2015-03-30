@@ -45,6 +45,12 @@ func main() {
 - ~~豆瓣一刻~~
 - ~~ifanr 观察~~
 - ~~mindstore~~
+- Show HN and Ask HN
+- kickstarter:Technology sorted by Newest
+- Gadget Hunt
+- Beta List:newest
+- Startup List
+- 点名时间：新品
 - 澎湃新闻
 - 少数派
 - 什么值得买
