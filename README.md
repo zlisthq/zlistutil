@@ -45,7 +45,7 @@ func main() {
 - ~~豆瓣一刻~~
 - ~~ifanr 观察~~
 - ~~mindstore~~
-- Show HN and Ask HN
+- ~~Show HN and Ask HN~~
 - kickstarter:Technology sorted by Newest
 - Gadget Hunt
 - Beta List:newest
