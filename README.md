@@ -46,7 +46,7 @@ func main() {
 - ~~ifanr 观察~~
 - ~~mindstore~~
 - Show HN and Ask HN
-- kickstarter:Technology sorted by Newest
+- ~~kickstarter:Technology sorted by Newest~~
 - Gadget Hunt
 - Beta List:newest
 - Startup List

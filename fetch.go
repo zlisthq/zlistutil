@@ -49,6 +49,11 @@ const (
 	IFANR = "http://www.ifanr.com"
 	//mindstore
 	MINDSTORE = "http://mindstore.io"
+	//Kickstarter technology newest
+	KICKSTARTER_BASE_URL = "https://www.kickstarter.com"
+	KICKSTARTER          = "https://www.kickstarter.com/discover/categories/technology?sort=newest"
+	//gadgethunt daily
+	GADGETHUNT = "http://www.gadgethunt.club/daily"
 )
 
 type Item struct {
@@ -368,8 +373,26 @@ func FetchMindStore(url string, num int) []Item {
 	var items []Item
 	doc.Find(".mind-list-ul li").Each(func(i int, s *goquery.Selection) {
 		var item Item
-		item.Title = strings.TrimSpace(s.Find(".mind-title a").Text()) + " : " + s.Find(".mind-des").Text()
+		item.Title = strings.TrimSpace(s.Find(".mind-title a").Text()) + " : " + strings.TrimSpace(s.Find(".mind-des").Text())
 		item.Url, _ = s.Find(".mind-title a").Attr("href")
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
+}
+
+func FetchKickstarter(url string, num int) []Item {
+	if num < 0 {
+		return nil
+	}
+	doc, err := goquery.NewDocument(url)
+	perror(err)
+	var items []Item
+	doc.Find(".project").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = s.Find(".project-card-content a").Text() + " : " + strings.TrimSpace(s.Find(".project-blurb").Text())
+		item.Url, _ = s.Find(".project-thumbnail a").Attr("href")
+		item.Url = KICKSTARTER_BASE_URL + item.Url
 		items = append(items, item)
 	})
 	num = min(num, len(items))
