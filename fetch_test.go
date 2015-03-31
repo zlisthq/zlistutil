@@ -136,3 +136,13 @@ func TestFetchMindStore(t *testing.T) {
 		t.Error("Expected not nil")
 	}
 }
+func TestFetchKickstarter(t *testing.T) {
+	var item_list []Item
+	num := 1
+	item_list = FetchKickstarter(KICKSTARTER, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+}
