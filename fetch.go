@@ -262,7 +262,6 @@ func FetchWanqu(url string, num int) []Item {
 		var item Item
 		item.Title = s.Find("a").Text()
 		item.Url, _ = s.Find("a").Attr("href")
-		item.Url = WANQU + item.Url
 		items = append(items, item)
 	})
 	num = min(num, len(items))
