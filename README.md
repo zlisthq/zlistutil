@@ -50,6 +50,8 @@ func main() {
 - Gadget Hunt
 - Beta List:newest
 - Startup List
+- news.mydrivers.com/blog/
+- techmeme.com
 - 点名时间：新品
 - 澎湃新闻
 - 少数派
