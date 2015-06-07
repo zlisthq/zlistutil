@@ -4,142 +4,94 @@ import (
 	"testing"
 )
 
-func TestFetchProductHunt(t *testing.T) {
+func TestGetItem(t *testing.T) {
 	var item_list []Item
 	num := 1
-	item_list = FetchProductHunt(PRODUCTHUNT_TODAY, num)
+	item_list = GetItem(SITE_V2EX, V2EX_HOT, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchJianshu(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchJianshu(JIANSHU_TOP_DAY, num)
+	item_list = GetItem(SITE_PRODUCTHUNT, PRODUCTHUNT_TODAY, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-
-func TestFetchNEXT(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchNEXT(NEXT, num)
+	item_list = GetItem(SITE_JIANSHU, JIANSHU_TOP_DAY, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-
-func TestFetchHackerNews(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchHackerNews(HACKER_NEWS_TOP, num)
+	item_list = GetItem(SITE_NEXT, NEXT, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchV2ex(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchV2ex(V2EX_HOT, num)
+	item_list = GetItem(SITE_HACKERNEWS, HACKER_NEWS_TOP, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchZhihuDaily(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchZhihuDaily(DAILY_FETCH_NOW, num)
+	item_list = GetItem(SITE_ZHIHUDAILY, DAILY_FETCH_NOW, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchWanqu(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchWanqu(WANQU, num)
+	item_list = GetItem(SITE_WANQU, WANQU, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchPingWestNews(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchPingWestNews(PINGWEST_NEWS, num)
+	item_list = GetItem(SITE_PINGWEST, PINGWEST_NEWS, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchSolidot(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchSolidot(SOLIDOT, num)
+	item_list = GetItem(SITE_SOLIDOT, SOLIDOT, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchGitHub(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchGitHub(GITHUB, num)
+	item_list = GetItem(SITE_GITHUB, GITHUB, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchDoubanMoment(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchDoubanMoment(DOUBAN_MOMENT, num)
+	item_list = GetItem(SITE_SOLIDOT, SOLIDOT, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchIfanr(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchIfanr(IFANR, num)
+	item_list = GetItem(SITE_DOUBANMOMENT, DOUBAN_MOMENT, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchMindStore(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchMindStore(MINDSTORE, num)
+	item_list = GetItem(SITE_IFANR, IFANR, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {
 		t.Error("Expected not nil")
 	}
-}
-func TestFetchKickstarter(t *testing.T) {
-	var item_list []Item
-	num := 1
-	item_list = FetchKickstarter(KICKSTARTER, num)
+	item_list = GetItem(SITE_MINDSTORE, MINDSTORE, num)
+	if len(item_list) != num {
+		t.Error("Expected ", num, "got", len(item_list))
+	} else if item_list == nil {
+		t.Error("Expected not nil")
+	}
+	item_list = GetItem(SITE_KICKSTARTER, KICKSTARTER, num)
 	if len(item_list) != num {
 		t.Error("Expected ", num, "got", len(item_list))
 	} else if item_list == nil {

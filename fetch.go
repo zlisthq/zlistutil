@@ -13,6 +13,24 @@ import (
 )
 
 const (
+	//SITE NAME
+	SITE_V2EX         = "v2ex"
+	SITE_ZHIHUDAILY   = "zhihu_daily"
+	SITE_HACKERNEWS   = "hackernews"
+	SITE_JIANSHU      = "jianshu"
+	SITE_PRODUCTHUNT  = "producthunt"
+	SITE_NEXT         = "next"
+	SITE_WANQU        = "wanqu"
+	SITE_PINGWEST     = "pingwest"
+	SITE_SOLIDOT      = "solidot"
+	SITE_GITHUB       = "github"
+	SITE_DOUBANMOMENT = "douban_moment"
+	SITE_IFANR        = "ifanr"
+	SITE_MINDSTORE    = "mindstore"
+	SITE_KICKSTARTER  = "kickstarter"
+	SITE_GADGETHUNT   = "gadgethunt"
+
+	/* URL */
 	// V2ex
 	V2EX_BASE_URL = "https://www.v2ex.com/api/topics/"
 	V2EX_HOT      = "https://www.v2ex.com/api/topics/hot.json"
@@ -113,7 +131,28 @@ func getDate() string {
 	return t.Format(layout)
 }
 
-func FetchProductHunt(url string, num int) []Item {
+func GetItem(site string, url string, num int) []Item {
+	m := map[string]func(string, int) []Item{
+		SITE_V2EX:         FetchV2ex,
+		SITE_ZHIHUDAILY:   fetchZhihuDaily,
+		SITE_HACKERNEWS:   fetchHackerNews,
+		SITE_JIANSHU:      fetchJianshu,
+		SITE_PRODUCTHUNT:  fetchProductHunt,
+		SITE_NEXT:         fetchNEXT,
+		SITE_WANQU:        fetchWanqu,
+		SITE_PINGWEST:     fetchPingWestNews,
+		SITE_SOLIDOT:      fetchSolidot,
+		SITE_GITHUB:       fetchGitHub,
+		SITE_DOUBANMOMENT: fetchDoubanMoment,
+		SITE_IFANR:        fetchIfanr,
+		SITE_MINDSTORE:    fetchMindStore,
+		SITE_KICKSTARTER:  fetchKickstarter,
+		//SITE_GADGETHUNT   :,
+	}
+	return m[site](url, num)
+}
+
+func fetchProductHunt(url string, num int) []Item {
 	var item_list []Item
 	item_list = fetchProductHuntHelper(url, num)
 	if item_list == nil && url == PRODUCTHUNT_TODAY {
@@ -151,7 +190,7 @@ func fetchProductHuntHelper(url string, num int) []Item {
 	return items
 }
 
-func FetchJianshu(url string, num int) []Item {
+func fetchJianshu(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -169,7 +208,7 @@ func FetchJianshu(url string, num int) []Item {
 	return items[:num]
 }
 
-func FetchNEXT(url string, num int) []Item {
+func fetchNEXT(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -187,7 +226,7 @@ func FetchNEXT(url string, num int) []Item {
 	return items[:num]
 }
 
-func FetchHackerNews(url string, num int) []Item {
+func fetchHackerNews(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -228,7 +267,7 @@ func FetchV2ex(url string, num int) []Item {
 	return items[:num]
 }
 
-func FetchZhihuDaily(url string, num int) []Item {
+func fetchZhihuDaily(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -251,7 +290,7 @@ func FetchZhihuDaily(url string, num int) []Item {
 	return items
 
 }
-func FetchWanqu(url string, num int) []Item {
+func fetchWanqu(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -268,7 +307,7 @@ func FetchWanqu(url string, num int) []Item {
 	return items[:num]
 
 }
-func FetchPingWestNews(url string, num int) []Item {
+func fetchPingWestNews(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -287,7 +326,7 @@ func FetchPingWestNews(url string, num int) []Item {
 
 }
 
-func FetchSolidot(url string, num int) []Item {
+func fetchSolidot(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -304,7 +343,7 @@ func FetchSolidot(url string, num int) []Item {
 	num = min(num, len(items))
 	return items[:num]
 }
-func FetchGitHub(url string, num int) []Item {
+func fetchGitHub(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -322,7 +361,7 @@ func FetchGitHub(url string, num int) []Item {
 	num = min(num, len(items))
 	return items[:num]
 }
-func FetchDoubanMoment(url string, num int) []Item {
+func fetchDoubanMoment(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -346,7 +385,7 @@ func FetchDoubanMoment(url string, num int) []Item {
 	return items
 
 }
-func FetchIfanr(url string, num int) []Item {
+func fetchIfanr(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -363,7 +402,7 @@ func FetchIfanr(url string, num int) []Item {
 	return items[:num]
 }
 
-func FetchMindStore(url string, num int) []Item {
+func fetchMindStore(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
@@ -380,7 +419,7 @@ func FetchMindStore(url string, num int) []Item {
 	return items[:num]
 }
 
-func FetchKickstarter(url string, num int) []Item {
+func fetchKickstarter(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
