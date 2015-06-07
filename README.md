@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	items := GetItem(SITE_V2EX, V2EX_HOT, 10)
+	items := zlistutil.GetItem(zlistutil.SITE_V2EX, zlistutil.V2EX_HOT, 10)
 	json_items, err := json.Marshal(&items)
 	if err != nil {
 		log.Fatal(err)
