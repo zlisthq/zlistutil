@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	items := zlistutil.FetchJianshu(zlistutil.JIANSHU_TOP_DAY, 10)
+	items := GetItem(SITE_V2EX, V2EX_HOT, 10)
 	json_items, err := json.Marshal(&items)
 	if err != nil {
 		log.Fatal(err)
