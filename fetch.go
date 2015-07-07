@@ -394,7 +394,7 @@ func fetchIfanr(url string, num int) []Item {
 	var items []Item
 	doc.Find(".post-item-content h2").Each(func(i int, s *goquery.Selection) {
 		var item Item
-		item.Title = s.Find("a").Text()
+		item.Title = strings.TrimSpace(s.Find("a").Text())
 		item.Url, _ = s.Find("a").Attr("href")
 		items = append(items, item)
 	})
