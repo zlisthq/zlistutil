@@ -5,7 +5,7 @@ import (
 	// "fmt"
 	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
-	"log"
+	// "log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -112,12 +112,6 @@ func http_helper(method, url string) ([]byte, error) {
 	return ioutil.ReadAll(res.Body)
 }
 
-func perror(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func min(a, b int) int {
 	if a < b {
 		return a
@@ -155,15 +149,16 @@ func GetItem(site string, url string, num int) []Item {
 func fetchProductHunt(url string, num int) []Item {
 	var item_list []Item
 	item_list = fetchProductHuntHelper(url, num)
-	if item_list == nil && url == PRODUCTHUNT_TODAY {
+	if len(item_list) == 0 && url == PRODUCTHUNT_TODAY {
 		item_list = fetchProductHuntHelper(PRODUCTHUNT_YESTERDAY, num)
 	}
 	return item_list
 }
 
 func fetchProductHuntHelper(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
@@ -171,15 +166,18 @@ func fetchProductHuntHelper(url string, num int) []Item {
 	req.Header.Set("Authorization", "Bearer 2dd283a9b3643bc72211c5c2b4aa085b7c9906d68194ea4805c00c46e7be01f4")
 	res, err := client.Do(req)
 	if err != nil {
-		return nil
+		return items
 	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
-	perror(err)
+	if err != nil {
+		return items
+	}
 	var productItems ProductHuntsItems
 	err = json.Unmarshal(body, &productItems)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	num = min(num, len(productItems.Posts))
 	for i := 0; i < num; i++ {
 		var item Item
@@ -191,12 +189,14 @@ func fetchProductHuntHelper(url string, num int) []Item {
 }
 
 func fetchJianshu(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".article-list li").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = s.Find("h4").Text()
@@ -209,12 +209,14 @@ func fetchJianshu(url string, num int) []Item {
 }
 
 func fetchNEXT(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".post").First().Find(".product-item").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = s.Find(".product-url a").Text() + " : " + s.Find(".post-tagline").Text()
@@ -227,23 +229,31 @@ func fetchNEXT(url string, num int) []Item {
 }
 
 func fetchHackerNews(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	body, err := http_helper("GET", url)
-	perror(err)
+	if err != nil {
+		return items
+	}
 	var ids []int
 	err = json.Unmarshal(body, &ids)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	num = min(num, len(ids))
 	for i := 0; i < num; i++ {
 		item_url := HACKER_NEWS_ITEM + strconv.Itoa(ids[i]) + ".json"
 		body, err := http_helper("GET", item_url)
-		perror(err)
+		if err != nil {
+			return items
+		}
 		var item Item
 		err = json.Unmarshal(body, &item)
-		perror(err)
+		if err != nil {
+			return items
+		}
 		if item.Url == "" { //Ask HN
 			item.Url = HACKER_NEWS_BASE_URL + "/item?id=" + strconv.Itoa(ids[i])
 		}
@@ -252,34 +262,43 @@ func fetchHackerNews(url string, num int) []Item {
 	return items
 }
 func fetchV2ex(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	res, err := http.Get(url)
-	perror(err)
+	if err != nil {
+		return items
+	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	err = json.Unmarshal(body, &items)
-	perror(err)
+	if err != nil {
+		return items
+	}
 	num = min(num, len(items))
 	return items[:num]
 }
 
 func fetchZhihuDaily(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	res, err := http.Get(url)
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
-	perror(err)
+	if err != nil {
+		return items
+	}
 	var daily DailyItems
 	err = json.Unmarshal(body, &daily)
-	perror(err)
-
-	var items []Item
+	if err != nil {
+		return items
+	}
 	num = min(num, len(daily.News))
 	for i := 0; i < num; i++ {
 		var item Item
@@ -291,12 +310,14 @@ func fetchZhihuDaily(url string, num int) []Item {
 
 }
 func fetchWanqu(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".list-group-item").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = s.Find("a").Text()
@@ -308,12 +329,14 @@ func fetchWanqu(url string, num int) []Item {
 
 }
 func fetchPingWestNews(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".item_title").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = s.Find(".topic").Text()
@@ -327,12 +350,14 @@ func fetchPingWestNews(url string, num int) []Item {
 }
 
 func fetchSolidot(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".bg_htit").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = s.Find("a").Last().Text()
@@ -344,12 +369,14 @@ func fetchSolidot(url string, num int) []Item {
 	return items[:num]
 }
 func fetchGitHub(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".repo-list-item").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		// item.Title = s.Find(".repo-list-name a").Text()
@@ -362,19 +389,22 @@ func fetchGitHub(url string, num int) []Item {
 	return items[:num]
 }
 func fetchDoubanMoment(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	url += getDate()
 	res, err := http.Get(url)
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
-	perror(err)
+	if err != nil {
+		return items
+	}
 	var moment MomentItems
 	err = json.Unmarshal(body, &moment)
-	perror(err)
-
-	var items []Item
+	if err != nil {
+		return items
+	}
 	num = min(num, len(moment.Posts))
 	for i := 0; i < num; i++ {
 		var item Item
@@ -386,12 +416,14 @@ func fetchDoubanMoment(url string, num int) []Item {
 
 }
 func fetchIfanr(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".post-item-content h2").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = strings.TrimSpace(s.Find("a").Text())
@@ -403,12 +435,14 @@ func fetchIfanr(url string, num int) []Item {
 }
 
 func fetchMindStore(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".mind-list-ul li").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = strings.TrimSpace(s.Find(".mind-title a").Text()) + " : " + strings.TrimSpace(s.Find(".mind-des").Text())
@@ -420,12 +454,14 @@ func fetchMindStore(url string, num int) []Item {
 }
 
 func fetchKickstarter(url string, num int) []Item {
+	items := []Item{}
 	if num < 0 {
-		return nil
+		return items
 	}
 	doc, err := goquery.NewDocument(url)
-	perror(err)
-	var items []Item
+	if err != nil {
+		return items
+	}
 	doc.Find(".project").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = s.Find(".project-card-content a").Text() + " : " + strings.TrimSpace(s.Find(".project-blurb").Text())
