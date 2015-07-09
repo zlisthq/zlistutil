@@ -133,7 +133,7 @@ func getDate() string {
 
 func GetItem(site string, url string, num int) []Item {
 	m := map[string]func(string, int) []Item{
-		SITE_V2EX:         FetchV2ex,
+		SITE_V2EX:         fetchV2ex,
 		SITE_ZHIHUDAILY:   fetchZhihuDaily,
 		SITE_HACKERNEWS:   fetchHackerNews,
 		SITE_JIANSHU:      fetchJianshu,
@@ -197,7 +197,7 @@ func fetchJianshu(url string, num int) []Item {
 	doc, err := goquery.NewDocument(url)
 	perror(err)
 	var items []Item
-	doc.Find(".top-notes li").Each(func(i int, s *goquery.Selection) {
+	doc.Find(".article-list li").Each(func(i int, s *goquery.Selection) {
 		var item Item
 		item.Title = s.Find("h4").Text()
 		item.Url, _ = s.Find("h4 a").Attr("href")
@@ -251,7 +251,7 @@ func fetchHackerNews(url string, num int) []Item {
 	}
 	return items
 }
-func FetchV2ex(url string, num int) []Item {
+func fetchV2ex(url string, num int) []Item {
 	if num < 0 {
 		return nil
 	}
