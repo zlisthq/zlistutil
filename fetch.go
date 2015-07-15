@@ -289,6 +289,9 @@ func fetchZhihuDaily(url string, num int) []Item {
 		return items
 	}
 	res, err := http.Get(url)
+	if err != nil {
+		return items
+	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -395,6 +398,9 @@ func fetchDoubanMoment(url string, num int) []Item {
 	}
 	url += getDate()
 	res, err := http.Get(url)
+	if err != nil {
+		return items
+	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
