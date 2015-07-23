@@ -1,16 +1,18 @@
 package zlistutil
 
 import (
+	"fmt"
 	"testing"
 )
 
 func testGetItem(t *testing.T, site string, url string, num int) {
+	fmt.Println("Test site:", site, ", url:", url)
 	var item_list []Item
 	item_list = GetItem(site, url, num)
 	if len(item_list) != num {
 		t.Error("Site [", site, "] expected", num, "got", len(item_list))
 	} else if item_list == nil {
-		t.Error("Site [", site, "] expected not nil")
+		t.Error("Site :", site, "expected not nil")
 	}
 }
 
@@ -31,4 +33,5 @@ func TestAllGetItem(t *testing.T) {
 	testGetItem(t, SITE_IFANR, IFANR, num)
 	testGetItem(t, SITE_MINDSTORE, MINDSTORE, num)
 	testGetItem(t, SITE_KICKSTARTER, KICKSTARTER, num)
+	testGetItem(t, SITE_TOUTIAO, TOUTIAO, num)
 }

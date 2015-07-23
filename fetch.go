@@ -29,6 +29,7 @@ const (
 	SITE_MINDSTORE    = "mindstore"
 	SITE_KICKSTARTER  = "kickstarter"
 	SITE_GADGETHUNT   = "gadgethunt"
+	SITE_TOUTIAO      = "toutiao"
 
 	/* URL */
 	// V2ex
@@ -72,6 +73,8 @@ const (
 	KICKSTARTER          = "https://www.kickstarter.com/discover/categories/technology?sort=newest"
 	//gadgethunt daily
 	GADGETHUNT = "http://www.gadgethunt.club/daily"
+	//toutiao.io
+	TOUTIAO = "http://toutiao.io"
 )
 
 type Item struct {
@@ -142,6 +145,7 @@ func GetItem(site string, url string, num int) []Item {
 		SITE_MINDSTORE:    fetchMindStore,
 		SITE_KICKSTARTER:  fetchKickstarter,
 		//SITE_GADGETHUNT   :,
+		SITE_TOUTIAO: fetchToutiao,
 	}
 	return m[site](url, num)
 }
@@ -473,6 +477,25 @@ func fetchKickstarter(url string, num int) []Item {
 		item.Title = s.Find(".project-card-content a").Text() + " : " + strings.TrimSpace(s.Find(".project-blurb").Text())
 		item.Url, _ = s.Find(".project-thumbnail a").Attr("href")
 		item.Url = KICKSTARTER_BASE_URL + item.Url
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
+}
+
+func fetchToutiao(url string, num int) []Item {
+	items := []Item{}
+	if num < 0 {
+		return items
+	}
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		return items
+	}
+	doc.Find(".post").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = s.Find(".content a").Text()
+		item.Url, _ = s.Find(".content a").Attr("href")
 		items = append(items, item)
 	})
 	num = min(num, len(items))
