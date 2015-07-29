@@ -34,4 +34,4 @@ func main() {
 
 请提交待添加的网址到 [Issues](https://github.com/zlisthq/zlistutil/issues)
 
-[待添加站点](https://github.com/zlisthq/zlistutil/labels/enhancement)
+[待添加站点](https://github.com/zlisthq/zlistutil/labels/new%20site)
