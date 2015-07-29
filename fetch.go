@@ -30,6 +30,7 @@ const (
 	SITE_KICKSTARTER  = "kickstarter"
 	SITE_GADGETHUNT   = "gadgethunt"
 	SITE_TOUTIAO      = "toutiao"
+	SITE_SEGMENTFAULT = "segmentfault"
 
 	/* URL */
 	// V2ex
@@ -75,6 +76,9 @@ const (
 	GADGETHUNT = "http://www.gadgethunt.club/daily"
 	//toutiao.io
 	TOUTIAO = "http://toutiao.io"
+	//segmentfault
+	SEGMENTFAULT_BASE_URL = "http://segmentfault.com"
+	SEGMENTFAULT_BLOG     = "http://segmentfault.com/blogs"
 )
 
 type Item struct {
@@ -144,8 +148,8 @@ func GetItem(site string, url string, num int) []Item {
 		SITE_IFANR:        fetchIfanr,
 		SITE_MINDSTORE:    fetchMindStore,
 		SITE_KICKSTARTER:  fetchKickstarter,
-		//SITE_GADGETHUNT   :,
-		SITE_TOUTIAO: fetchToutiao,
+		SITE_TOUTIAO:      fetchToutiao,
+		SITE_SEGMENTFAULT: fetchSegmentfault,
 	}
 	return m[site](url, num)
 }
@@ -496,6 +500,26 @@ func fetchToutiao(url string, num int) []Item {
 		var item Item
 		item.Title = s.Find(".content a").Text()
 		item.Url, _ = s.Find(".content a").Attr("href")
+		items = append(items, item)
+	})
+	num = min(num, len(items))
+	return items[:num]
+}
+
+func fetchSegmentfault(url string, num int) []Item {
+	items := []Item{}
+	if num < 0 {
+		return items
+	}
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		return items
+	}
+	doc.Find(".stream-list__item").Each(func(i int, s *goquery.Selection) {
+		var item Item
+		item.Title = s.Find(".title a").Text()
+		item.Url, _ = s.Find(".title a").Attr("href")
+		item.Url = SEGMENTFAULT_BASE_URL + item.Url
 		items = append(items, item)
 	})
 	num = min(num, len(items))

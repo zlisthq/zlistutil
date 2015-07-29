@@ -34,4 +34,5 @@ func TestAllGetItem(t *testing.T) {
 	testGetItem(t, SITE_MINDSTORE, MINDSTORE, num)
 	testGetItem(t, SITE_KICKSTARTER, KICKSTARTER, num)
 	testGetItem(t, SITE_TOUTIAO, TOUTIAO, num)
+	testGetItem(t, SITE_SEGMENTFAULT, SEGMENTFAULT_BLOG, num)
 }
