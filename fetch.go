@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	// "log"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -31,6 +32,7 @@ const (
 	SITE_GADGETHUNT   = "gadgethunt"
 	SITE_TOUTIAO      = "toutiao"
 	SITE_SEGMENTFAULT = "segmentfault"
+	SITE_THEPAPER     = "thepaper"
 
 	/* URL */
 	// V2ex
@@ -79,6 +81,8 @@ const (
 	//segmentfault
 	SEGMENTFAULT_BASE_URL = "http://segmentfault.com"
 	SEGMENTFAULT_BLOG     = "http://segmentfault.com/blogs"
+	//thepaper
+	THEPAPER = "http://www.thepaper.cn/"
 )
 
 type Item struct {
@@ -150,6 +154,7 @@ func GetItem(site string, url string, num int) []Item {
 		SITE_KICKSTARTER:  fetchKickstarter,
 		SITE_TOUTIAO:      fetchToutiao,
 		SITE_SEGMENTFAULT: fetchSegmentfault,
+		SITE_THEPAPER:     fetchThePaper,
 	}
 	return m[site](url, num)
 }
@@ -522,6 +527,51 @@ func fetchSegmentfault(url string, num int) []Item {
 		item.Url = SEGMENTFAULT_BASE_URL + item.Url
 		items = append(items, item)
 	})
+	num = min(num, len(items))
+	return items[:num]
+}
+
+func fetchThePaper(url string, num int) []Item {
+	items := []Item{}
+	if num < 0 {
+		return items
+	}
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return items
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return items
+	}
+	src := string(body)
+	//将HTML标签全转换成小写
+	re, _ := regexp.Compile("\\<[\\S\\s]+?\\>")
+	src = re.ReplaceAllStringFunc(src, strings.ToLower)
+
+	//去除STYLE
+	re, _ = regexp.Compile("\\<style[\\S\\s]+?\\</style\\>")
+	src = re.ReplaceAllString(src, "")
+
+	//去除SCRIPT
+	re, _ = regexp.Compile("\\<script[\\S\\s]+?\\</script\\>")
+	src = re.ReplaceAllString(src, "")
+
+	re, _ = regexp.Compile("<a(.*?)href=\"newsdetail_forward_[0-9]+[^>]*>(.*?)</a>")
+	aresult := re.FindAllString(src, 10)
+
+	for _, str := range aresult {
+		var item Item
+		re, _ = regexp.Compile(">(.*)<")
+		title := re.FindString(str)
+		item.Title = title[1 : len(title)-1]
+		re, _ = regexp.Compile("newsdetail_forward_[0-9]+")
+		item.Url = THEPAPER + re.FindString(str)
+		items = append(items, item)
+	}
+
 	num = min(num, len(items))
 	return items[:num]
 }

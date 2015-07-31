@@ -9,6 +9,7 @@ func testGetItem(t *testing.T, site string, url string, num int) {
 	fmt.Println("Test site:", site, ", url:", url)
 	var item_list []Item
 	item_list = GetItem(site, url, num)
+	// fmt.Println(item_list)
 	if len(item_list) != num {
 		t.Error("Site [", site, "] expected", num, "got", len(item_list))
 	} else if item_list == nil {
@@ -18,6 +19,7 @@ func testGetItem(t *testing.T, site string, url string, num int) {
 
 func TestAllGetItem(t *testing.T) {
 	num := 2
+
 	testGetItem(t, SITE_V2EX, V2EX_HOT, num)
 	testGetItem(t, SITE_PRODUCTHUNT, PRODUCTHUNT_TODAY, num)
 	testGetItem(t, SITE_JIANSHU, JIANSHU_TOP_DAY, num)
@@ -35,4 +37,5 @@ func TestAllGetItem(t *testing.T) {
 	testGetItem(t, SITE_KICKSTARTER, KICKSTARTER, num)
 	testGetItem(t, SITE_TOUTIAO, TOUTIAO, num)
 	testGetItem(t, SITE_SEGMENTFAULT, SEGMENTFAULT_BLOG, num)
+	testGetItem(t, SITE_THEPAPER, THEPAPER, num)
 }
