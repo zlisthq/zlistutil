@@ -559,18 +559,18 @@ func fetchThePaper(url string, num int) []Item {
 	}
 	src := string(body)
 	//将HTML标签全转换成小写
-	re, _ := regexp.Compile("\\<[\\S\\s]+?\\>")
-	src = re.ReplaceAllStringFunc(src, strings.ToLower)
+	//re, _ := regexp.Compile("\\<[\\S\\s]+?\\>")
+	//src = re.ReplaceAllStringFunc(src, strings.ToLower)
 
 	//去除STYLE
-	re, _ = regexp.Compile("\\<style[\\S\\s]+?\\</style\\>")
+	re, _ := regexp.Compile("\\<style[\\S\\s]+?\\</style\\>")
 	src = re.ReplaceAllString(src, "")
 
 	//去除SCRIPT
 	re, _ = regexp.Compile("\\<script[\\S\\s]+?\\</script\\>")
 	src = re.ReplaceAllString(src, "")
 
-	re, _ = regexp.Compile("<a(.*?)href=\"newsdetail_forward_[0-9]+[^>]*>(.*?)</a>")
+	re, _ = regexp.Compile("<a(.*?)href=\"newsDetail_forward_[0-9]+[^>]*>(.*?)</a>")
 	aresult := re.FindAllString(src, 10)
 
 	for _, str := range aresult {
@@ -578,7 +578,7 @@ func fetchThePaper(url string, num int) []Item {
 		re, _ = regexp.Compile(">(.*)<")
 		title := re.FindString(str)
 		item.Title = title[1 : len(title)-1]
-		re, _ = regexp.Compile("newsdetail_forward_[0-9]+")
+		re, _ = regexp.Compile("newsDetail_forward_[0-9]+")
 		item.Url = THEPAPER + re.FindString(str)
 		items = append(items, item)
 	}

@@ -19,7 +19,7 @@ func testGetItem(t *testing.T, site string, url string, num int) {
 
 func TestOne(t *testing.T) {
 	num := 2
-	testGetItem(t, SITE_GUOKR, GUOKR_HANDPICK, num)
+	testGetItem(t, SITE_THEPAPER, THEPAPER, num)
 }
 
 func TestAllGetItem(t *testing.T) {
