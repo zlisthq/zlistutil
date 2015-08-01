@@ -33,6 +33,7 @@ const (
 	SITE_TOUTIAO      = "toutiao"
 	SITE_SEGMENTFAULT = "segmentfault"
 	SITE_THEPAPER     = "thepaper"
+	SITE_GUOKR        = "guokr"
 
 	/* URL */
 	// V2ex
@@ -83,6 +84,8 @@ const (
 	SEGMENTFAULT_BLOG     = "http://segmentfault.com/blogs"
 	//thepaper
 	THEPAPER = "http://www.thepaper.cn/"
+	//果壳精选
+	GUOKR_HANDPICK = "http://apis.guokr.com/handpick/article.json?ad=1&category=all&retrieve_type=by_since"
 )
 
 type Item struct {
@@ -107,6 +110,13 @@ type ProductHuntsItems struct {
 		Name    string `json:"name"`
 		Tagline string `json:"tagline"`
 		Url     string `json:"redirect_url"`
+	}
+}
+
+type GuokrItems struct {
+	Result []struct {
+		Title string `json:"title"`
+		Url   string `json:"page_source"`
 	}
 }
 
@@ -155,6 +165,7 @@ func GetItem(site string, url string, num int) []Item {
 		SITE_TOUTIAO:      fetchToutiao,
 		SITE_SEGMENTFAULT: fetchSegmentfault,
 		SITE_THEPAPER:     fetchThePaper,
+		SITE_GUOKR:        fetchGuokr,
 	}
 	return m[site](url, num)
 }
@@ -323,8 +334,8 @@ func fetchZhihuDaily(url string, num int) []Item {
 		items = append(items, item)
 	}
 	return items
-
 }
+
 func fetchWanqu(url string, num int) []Item {
 	items := []Item{}
 	if num < 0 {
@@ -574,4 +585,33 @@ func fetchThePaper(url string, num int) []Item {
 
 	num = min(num, len(items))
 	return items[:num]
+}
+
+func fetchGuokr(url string, num int) []Item {
+	items := []Item{}
+	if num < 0 {
+		return items
+	}
+	res, err := http.Get(url + "&limit=" + strconv.Itoa(num))
+	if err != nil {
+		return items
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return items
+	}
+	var guokr GuokrItems
+	err = json.Unmarshal(body, &guokr)
+	if err != nil {
+		return items
+	}
+	num = min(num, len(guokr.Result))
+	for i := 0; i < num; i++ {
+		var item Item
+		item.Title = guokr.Result[i].Title
+		item.Url = guokr.Result[i].Url
+		items = append(items, item)
+	}
+	return items
 }
